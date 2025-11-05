@@ -744,6 +744,12 @@ class FormulaOperations:
             expression = expression.replace('ABS(', 'abs(')
             expression = expression.replace('HAS_VALUE(', 'has_value_func(')
             
+            # Convert single = to == for comparisons (Excel-style to Python-style)
+            # Match patterns like: "value" = "value" or number = number
+            # But NOT ==, !=, <=, >=
+            import re
+            expression = re.sub(r'(?<![=!<>])\s*=\s*(?!=)', ' == ', expression)
+            
             # Define safe evaluation context
             safe_dict = {
                 "__builtins__": {},
